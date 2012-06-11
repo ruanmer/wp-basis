@@ -59,6 +59,27 @@ if ( ! function_exists( 'is_post_type' ) ) {
     }
 }
 
+/* GET POST TYPE NAME */
+if ( ! function_exists( 'get_post_type_name' ) ) {
+    function get_post_type_name( $post_id = false, $singular = false ) {
+        global $post;
+
+        if ( false === $post_id ) 
+            $id = $post->ID;
+        elseif ( is_numeric( $post_id ) )
+            $id = $post_id;
+
+        $post_type     = get_post_type( $id );
+        $post_type_obj = get_post_type_object( $post_type );
+
+        if ( true === $singular )
+            return $post_type_obj->labels->singular_name;
+        else
+            return $post_type_obj->labels->name;
+
+    }
+}
+
 /* GET PAGE LINK BY SLUG */
 if ( ! function_exists( 'get_page_link_by_slug' ) ) {
     function get_page_link_by_slug($page_slug) {
@@ -191,6 +212,23 @@ if ( function_exists( 'back_to' ) ) {
 /* NO RESULTS */
 if ( function_exists( 'no_result' ) ) {
     function no_result( $text = 'Nenhum resultado encontrado.' ) {
-        echo '<div class="no-results">' . $text . '</div>';
+        echo '<article id="post-0" class="no-results">' . $text . '</article>';
     }
 }
+
+/* CUSTOM WP LIST CATEGORIES */
+function custom_wp_list_categories( $args = '', $item_classes = '', $anchor_classes = '', $wrap_text_elem = '' ) {
+    $categories = get_categories( $args );
+
+    foreach( $categories as $category ) { 
+        echo '  
+            <li class="' . ( $item_classes ? $item_classes . ' ' : '' ) . 'cat-item cat-item-' . $category->term_id . '">
+                <a href="' . get_category_link( $category->term_id ) . '" class="' . $anchor_classes . '" title="' . sprintf( __( "View all posts in %s" ), $category->name ) . '" ' . '>
+                    ' . ( $wrap_text_elem ? '<' . $wrap_text_elem . '>' : '' ) . $category->name . ( $wrap_text_elem ? '</' . $wrap_text_elem . '>' : '' ) . '
+                </a>
+            </li>
+        '; 
+    } 
+}
+
+

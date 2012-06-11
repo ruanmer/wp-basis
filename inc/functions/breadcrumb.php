@@ -38,8 +38,8 @@ function the_breadcrumb() {
     } elseif ( is_single() && !is_attachment() ) {
       if ( get_post_type() != 'post' ) {
         $post_type = get_post_type_object(get_post_type());
-        $slug = $post_type->rewrite;
-        echo '<a href="' . $homeLink . '/' . $slug['slug'] . '/">' . $post_type->labels->singular_name . '</a> ' . $delimiter . ' ';
+        $slug = get_post_type_archive_link(get_post_type());
+        echo '<a href="' . $slug . '">' . $post_type->labels->singular_name . '</a> ' . $delimiter . ' ';
         echo $before . get_the_title() . $after;
       } else {
         $cat = get_the_category(); $cat = $cat[0];
@@ -49,7 +49,7 @@ function the_breadcrumb() {
  
     } elseif ( !is_single() && !is_page() && get_post_type() != 'post' && !is_404() ) {
       $post_type = get_post_type_object(get_post_type());
-      echo $before . $post_type->labels->singular_name . $after;
+      echo $before . $post_type->labels->name . $after;
  
     } elseif ( is_attachment() ) {
       $parent = get_post($post->post_parent);
