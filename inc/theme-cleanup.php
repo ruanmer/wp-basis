@@ -93,6 +93,13 @@ if ( HAS_POST === true ){
 	}
 }
 
+/* Remove Page Columns */
+add_filter('manage_pages_columns', 'remove_page_columns');
+
+function remove_page_columns($defaults) {
+  unset($defaults['comments']);
+  return $defaults;
+}
 
 /* Remove Dashboard Widgets */
 add_action('wp_dashboard_setup', 'remove_dashboard_widgets');
@@ -141,3 +148,19 @@ if ( HAS_POST === false || HAS_LINK === false ){
 	}
 	add_action( 'wp_before_admin_bar_render', 'remove_admin_bar_links' );
 }
+
+
+/* 
+ * Admin Cleanup Style 
+ * 
+ * Hide 'donate' from plugin Taxonomy Order 
+ */
+function admin_cleanup_style() {
+    echo '
+        <style type="text/css">
+            #cpt_info_box{display:none!important}
+        </style>
+    ';
+}
+
+add_action('admin_head', 'admin_cleanup_style');

@@ -14,8 +14,7 @@
 
 <link rel="icon" type="image/png" href="<?php bloginfo('template_url'); ?>/img/favicon.png">
 
-<link rel="stylesheet" href="<?php bloginfo( 'stylesheet_url' ); ?>">
-<link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo( 'template_url' ); ?>/css/base.css">
+<link rel="stylesheet" type="text/css" media="all" href="<?php echo get_template_directory_uri(); ?>/css/base.css">
 
 <script src="<?php echo get_template_directory_uri(); ?>/js/libs/modernizr.js"></script>
 
