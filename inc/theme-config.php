@@ -1,12 +1,15 @@
 <?php 
 /* 
  * Theme Config
- * Version 0.1
+ * Version 0.1.1
  */
 
 /* Theme Author */
 define( 'THEME_AUTHOR', 'Autor' );
 define( 'THEME_AUTHOR_URL', 'http://www.meusite.com.br' );
+
+/* Theme Options */
+define( 'IMG_FOLDER_NAME', 'img' );
 
 /* General */
 define( 'POST_EXCERPT_LENGTH',  40 );

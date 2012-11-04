@@ -10,6 +10,11 @@ function prevent_file_cache() {
     }
 }
 
+/* IMAGE FOLDER */
+function theme_img_path() {
+    echo get_template_directory_uri() . '/' . IMG_FOLDER_NAME . '/';
+}
+
 /* META BOX */
 function get_meta_box( $meta_key, $single = true ){
     global $post;
@@ -141,6 +146,15 @@ if ( ! function_exists( 'get_the_post_thumbnail_src' ) ) {
     }
 }
 
+/* THE TERM NAME */
+if ( ! function_exists( 'the_term_name' ) ) {
+    function the_term_name(){
+        $term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) ); 
+        
+        echo $term->name;
+    }
+}
+
 /* CUSTOM OPTION TREE FUNCTIONS */
 if ( function_exists( 'get_option_tree' ) ) {
 
@@ -231,4 +245,74 @@ function custom_wp_list_categories( $args = '', $item_classes = '', $anchor_clas
     } 
 }
 
+/* PAGINATION */
+if ( ! function_exists( 'wp_pagination' ) ) {
+    function wp_pagination( $pagination_id = '', $pagination_classes = '' ) {
+        global $wp_query;
+
+        if ( $wp_query->max_num_pages > 1 ) : ?>
+            <nav id="<?php echo $pagination_id; ?>" class="pagination<?php if ( $pagination_classes ) echo ' ' . $pagination_classes; ?>">
+        <?php
+            if ( function_exists( 'wp_paginate' ) ) {
+                wp_paginate();
+            }
+            else { ?>
+                <div class="pagination-prev"><?php previous_posts_link( 'Anterior' ); ?></div>    
+                <div class="pagination-next"><?php next_posts_link( 'Próximo' ); ?></div>         
+        <?php 
+            } 
+        ?>
+            </nav><!-- /.pagination -->
+<?php       
+        endif;      
+    }
+}
+
+/* 
+ * HIERARCHICAL LIST OF PAGES 
+ * 
+ * @return ancestors, parent, siblings, children of current page
+ */
+if ( ! function_exists( 'wp_hierarchical_list_pages' ) ) {
+    function wp_hierarchical_list_pages() {
+        global $post;
+
+        /* if has parent */
+        if( $post->post_parent ) {
+            $parent_id  = $post->post_parent;
+
+            /* while has parent */
+            while ( $parent_id ) {
+                $page = get_page($parent_id);
+                $children = wp_list_pages("title_li=&child_of=".$parent_id."&echo=0");
+                $parent_id  = $page->post_parent;
+            }
+        }
+        /* else */
+        else { 
+            $children = wp_list_pages("title_li=&child_of=".$post->ID."&echo=0");
+        }
+
+        /* echo */
+        if ( !empty( $children ) )
+            echo $children;
+    }
+}
+
+/* WP LIST POSTS */
+if ( ! function_exists( 'wp_list_posts' ) ) {
+    function wp_list_posts( $wlp_args ){
+
+        $defaults = array( 'numberposts' => -1 );
+        
+        $myposts = get_posts( wp_parse_args( $wlp_args, $defaults ) );
+
+        foreach( $myposts as $post ) : ?>
+        <li>
+            <a href="<?php echo get_permalink( $post->ID ); ?>"><?php echo get_the_title( $post->ID ); ?></a>
+        </li>
+    <?php 
+        endforeach;
+    }
+}
 
